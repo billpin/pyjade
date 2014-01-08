@@ -129,7 +129,7 @@ class Compiler(object):
         return getattr(self, 'visit%s' % name)(node, *args, **kwargs)
 
     def visitLiteral(self, node):
-        self.buffer(node.str)
+        self.buffer(node.str.strip())
 
     def visitBlock(self, block):
         for node in block.nodes:

@@ -24,11 +24,13 @@ class Compiler(_Compiler):
           self.buffer('{%% if %s %%}%s %s() %s{%% endif %%}' % (caller_name, self.variable_start_string,
               caller_name, self.variable_end_string))
         else:
-          self.buffer('{%% block %s %%}'%block.name)
+          self.buffer('\n%s{%% block %s %%}'% ('  ' * (self.indents), block.name))
+          self.indents += 2
           if block.mode=='append': self.buffer('%ssuper()%s' % (self.variable_start_string, self.variable_end_string))
           self.visitBlock(block)
           if block.mode=='prepend': self.buffer('%ssuper()%s' % (self.variable_start_string, self.variable_end_string))
-          self.buffer('{% endblock %}')
+          self.buffer('%s{%% endblock %%}' % ("\n%s" % ('  ' * (self.indents-1)) if self.lastBuffered.endswith(">") else ''))
+          self.indents -= 2
 
     def visitMixin(self,mixin):
         self.mixing += 1
